@@ -40,9 +40,14 @@ var game = {
   init: function() {
     $(".board-container").empty();
     $(".gameover-container").empty();
+    this.addTurnText();
     this.currentPlayer = "X";
     board.init();
     this.takeTurn();
+  },
+  addTurnText: function() {
+    $(".board-container").append("<div class='turn-text'>" + 
+                                 this.currentPlayer + ", it's your turn.</div>");
   },
   takeTurn: function() {
     $(".board-space").on("click", function() {
@@ -55,6 +60,7 @@ var game = {
           game.tieScreen();
         } else {
           game.currentPlayer = game.currentPlayer === "X" ? "O" : "X";
+          $(".turn-text").text(game.currentPlayer + ", it's your turn.");
         }
       }
     });
@@ -95,13 +101,11 @@ var game = {
     return true;
   },
   winScreen: function(symbol) {
-    $(".gameover-container").append("<div class='gameover'></div>");
-    $(".gameover").text(symbol + ", you won!");
+    $(".turn-text").text(symbol + ", you won!");
     this.playAgain();
   },
   tieScreen: function() {
-    $(".gameover-container").append("<div class='gameover'></div>");
-    $(".gameover").text("It's a tie!");
+    $(".turn-text").text("It's a tie!");
     this.playAgain();
   },
   playAgain: function() {
