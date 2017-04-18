@@ -63,7 +63,7 @@ header {
 
 /* Gameover */
 
-.gameover {
+.gameover-container {
   font-size: 40px;
   text-align: center;
 }
