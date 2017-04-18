@@ -24,8 +24,8 @@ var board = {
       $(".board").append("<tr class='board-row-" + i + "'></tr>");
       for (var j = 0; j < this.board.length; j++) {
         $(".board-row-" + i).append("<td class='board-space' data-row='" + i + 
-                                     "' data-col='" + j + "'>" + 
-                                     this.board[i][j] + "</td>")
+                                    "' data-col='" + j + "'>" + 
+                                    this.board[i][j] + "</td>")
       }
     }
   },
@@ -39,8 +39,58 @@ var game = {
   currentPlayer: "X",
   takeTurn: function() {
     $(".board-space").on("click", function() {
-      board.addSymbol($(this), game.currentPlayer);
-      game.currentPlayer = game.currentPlayer == "X" ? "O" : "X";
+      if (game.validMove($(this))) {
+        board.addSymbol($(this), game.currentPlayer);
+        console.log(board.board);
+        if (game.win(game.currentPlayer)) {
+          game.winScreen(game.currentPlayer);
+        } else if (game.tie()) {
+          game.tieScreen();
+        } else {
+          game.currentPlayer = game.currentPlayer === "X" ? "O" : "X";
+        }
+      }
     });
+  },
+  validMove: function(space) {
+    return board.board[space.data("row")][space.data("col")] === " ";
+  },
+  win: function(symbol) {
+    var gameboard = board.board
+    for (var i = 0; i < gameboard.length; i++) {
+      if ((gameboard[i][0] === symbol &&
+           gameboard[i][1] === symbol &&
+           gameboard[i][2] === symbol) ||
+          (gameboard[0][i] === symbol &&
+           gameboard[1][i] === symbol &&
+           gameboard[2][i] === symbol)) {
+        return true;
+      }
+    }
+    if ((gameboard[0][0] === symbol &&
+         gameboard[1][1] === symbol &&
+         gameboard[2][2] === symbol) ||
+        (gameboard[2][0] === symbol &&
+         gameboard[1][1] === symbol &&
+         gameboard[0][2] === symbol)) {
+      return true;
+    }
+    return false;
+  },
+  tie: function() {
+    for (var i = 0; i < board.board.length; i++) {
+      for (var j = 0; j < board.board.length; j++) {
+        if (board.board[i][j] === " ") {
+          return false;
+        }
+      }
+    }
+    return true;
+  },
+  winScreen: function(symbol) {
+    $(".gameover").text(symbol + ", you won!");
+  },
+  tieScreen: function() {
+    $(".gameover").text("It's a tie!");
   },
 }
