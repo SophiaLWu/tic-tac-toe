@@ -37,11 +37,13 @@ var board = {
 
 var game = {
   currentPlayer: "X",
+  gameover: false,
   init: function() {
     $(".board-container").empty();
     $(".gameover-container").empty();
     this.addTurnText();
     this.currentPlayer = "X";
+    this.gameover = false;
     board.init();
     this.takeTurn();
   },
@@ -51,7 +53,7 @@ var game = {
   },
   takeTurn: function() {
     $(".board-space").on("click", function() {
-      if (game.validMove($(this))) {
+      if (!game.gameover && game.validMove($(this))) {
         board.addSymbol($(this), game.currentPlayer);
         console.log(board.board);
         if (game.win(game.currentPlayer)) {
@@ -101,10 +103,12 @@ var game = {
     return true;
   },
   winScreen: function(symbol) {
+    this.gameover = true;
     $(".turn-text").text(symbol + ", you won!");
     this.playAgain();
   },
   tieScreen: function() {
+    this.gameover = true;
     $(".turn-text").text("It's a tie!");
     this.playAgain();
   },
